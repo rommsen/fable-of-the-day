@@ -158,6 +158,7 @@ type Counter(initialProps) as this =
 let inline counter props = ofType<Counter,_,_> props []
 
 let init() =
+  printfn "HALLLLO"
   let element =
     fragment []
       [
