@@ -3,9 +3,10 @@ module FableApp
 open Fable.Core
 open Fable.Core.JsInterop
 open Fable.Import
-open Fable.Import
-open Fable.Core
 open Fable.Helpers.React
+open Fable.Import.Browser
+open Fable.Import.React
+open Fable.Helpers.React.Props
 
 // [<Pojo>]
 // type HelloProps = {
@@ -29,13 +30,8 @@ open Fable.Helpers.React
 
 // render()
 
-open Fable.Core
-open Fable.Core.JsInterop
-open Fable.Import
-open Fable.Import.Browser
-open Fable.Import.React
-open Fable.Helpers.React
-open Fable.Helpers.React.Props
+
+
 
 (*
 Element with Helpers
@@ -157,11 +153,20 @@ type Counter(initialProps) as this =
 
 let inline counter props = ofType<Counter,_,_> props []
 
+
+type [<RequireQualifiedAccess>] HelloProp =
+  | Name of string
+
+let inline hello (props: IProp list) (children: React.ReactElement list) : React.ReactElement =
+  ofImport "default" "../components/HelloJS" (keyValueList CaseRules.LowerFirst props) children
+
+
+
 let init() =
-  printfn "HALLLLO"
   let element =
     fragment []
       [
+        hello [ Name "JS 🌍" ] []
         welcome "🌍"
         welcome2 "2🌍"
         liste
