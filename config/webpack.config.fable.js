@@ -7,17 +7,7 @@ function resolve(filePath) {
 }
 
 var babelOptions = fableUtils.resolveBabelOptions({
-  presets: [
-    [
-      "env",
-      {
-        targets: {
-          browsers: "> 1%"
-        },
-        modules: false
-      }
-    ]
-  ]
+  presets: ["react-app"]
 });
 
 var isProduction = process.argv.indexOf("-p") >= 0;
