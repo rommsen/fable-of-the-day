@@ -47,7 +47,7 @@ module.exports = {
   appIndexJs: resolveApp("src/index.js"),
   appIndexFsharp: resolveApp("src/fable/FableOfTheDay.fsproj"),
   appPackageJson: resolveApp("package.json"),
-  appSrc: resolveApp("src"),
+  appReactSrc: resolveApp("src"),
   yarnLockFile: resolveApp("yarn.lock"),
   testsSetup: resolveApp("src/setupTests.js"),
   appNodeModules: resolveApp("node_modules"),

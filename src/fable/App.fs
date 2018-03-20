@@ -9,6 +9,8 @@ open Fable.Helpers.React.Props
 
 open Router
 
+importAll "../css/style.css"
+
 
 type [<RequireQualifiedAccess>] HelloProp =
   | Name of string
