@@ -4,36 +4,6 @@ open Fable.Core
 open Fable.Core.JsInterop
 open Fable.Import
 open Fable.Helpers.React
-open Fable.Import.Browser
-open Fable.Helpers.React.Props
-
-
-(*
-import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import StorePicker from "./StorePicker";
-import App from "./App";
-import NotFound from "./NotFound";
-
-const Router = () => (
-  <BrowserRouter>
-    <Switch>
-      <Route exact={true} path="/" component={StorePicker} />
-      <Route path="/store/:storeId" component={App} />
-      <Route component={NotFound} />
-    </Switch>
-  </BrowserRouter>
-);
-
-export default Router;
-*)
-
-
-// type [<RequireQualifiedAccess>] HelloProp =
-//   | Name of string
-
-// let inline hello (props: IProp list) (children: React.ReactElement list) : React.ReactElement =
-//   ofImport "default" "../components/HelloJS" (keyValueList CaseRules.LowerFirst props) children
 
 let inline kvList props =
   keyValueList CaseRules.LowerFirst props
@@ -71,4 +41,3 @@ let Router () =
           route [ Component StorePicker ]
         ]
     ]
-
