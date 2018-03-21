@@ -19,15 +19,18 @@ let inline browserRouter (children: React.ReactElement list): React.ReactElement
 let inline switch children =
   ofImport "Switch" "react-router-dom" (() :> obj) children
 
-type RouteProps =
+type RouteProps<'Props> =
   | Path of string
-  | Component of React.ComponentClass<obj>
+  | Component of ('Props -> React.ReactElement list -> React.ReactElement)
+  | Compi of React.Component<obj,obj>
   | Exact of bool
 
-let inline route (props : RouteProps list) : React.ReactElement =
+let inline storePicker props children = ofType<StorePicker,_,_> props children
+
+let inline route (props : RouteProps<_> list) : React.ReactElement =
   ofImport "Route"  "react-router-dom" (props |> kvList) []
 
-let StorePicker =
+let StorePickerJs =
   importDefault<React.ComponentClass<obj>> "../components/StorePicker"
 
 let App =
@@ -41,8 +44,8 @@ let Router () =
     [
       switch
         [
-          route [ Exact true ; Path "/" ; Component StorePicker ]
-          route [ Path "/store/:storeId" ; Component App ]
-          route [ Component StorePicker ]
+          route [ Exact true ; Path "/" ; Component storePicker ]
+          // route [ Path "/store/:storeId" ; Component App ]
+          // route [ Component StorePickerJs ]
         ]
     ]
