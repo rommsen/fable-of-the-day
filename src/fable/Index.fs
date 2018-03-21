@@ -1,4 +1,4 @@
-module FableApp
+module Index
 
 open Fable.Core.JsInterop
 open Fable.Import

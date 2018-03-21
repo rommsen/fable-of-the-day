@@ -5,6 +5,11 @@ open Fable.Core.JsInterop
 open Fable.Import
 open Fable.Helpers.React
 
+open Helpers
+open StorePicker
+
+Browser.console.log(getFunName())
+
 let inline kvList props =
   keyValueList CaseRules.LowerFirst props
 

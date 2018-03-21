@@ -3,6 +3,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Helpers.fs" />
+    <Compile Include="StorePicker.fs" />
     <Compile Include="Router.fs" />
     <Compile Include="Index.fs" />
     <!-- <Compile Include="Tmp.fs" /> -->
