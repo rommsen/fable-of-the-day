@@ -1,47 +1,54 @@
 module StorePicker
 
+open Fable.Core
 open Fable.Import
 open Fable.Helpers.React
+open Fable.Import.React
+open Fable.Helpers.React.Props
+open Fable.Core.JsInterop
 
+open Helpers
 
-// class StorePicker extends React.Component {
-//   myInput = React.createRef();
-//   static propTypes = {
-//     history: PropTypes.object
-//   };
+type [<Pojo>] History =
+  {
+    push : string -> unit
+  }
 
-//   goToStore = event => {
-//     // 1. Stop the form from submitting
-//     event.preventDefault();
-//     // 2. get the text from that input
-//     const storeName = this.myInput.value.value;
-//     // 3. Change the page to /store/whatever-they-entered
-//     this.props.history.push(`/store/${storeName}`);
-//   };
-//   render() {
-//     return (
-//       <form className="store-selector" onSubmit={this.goToStore}>
-//         <h2>Please Enter A Store</h2>
-//         <input
-//           type="text"
-//           ref={this.myInput}
-//           required
-//           placeholder="Store Name"
-//           defaultValue={getFunName()}
-//         />
-//         <button type="submit">Visit Store →</button>
-//       </form>
-//     );
-//   }
-// }
+type [<Pojo>] StorePickerProps =
+  {
+    history : History
+  }
 
-// export default StorePicker;
+type StorePicker(initialProps) as this =   // as this is important
+  inherit React.Component<StorePickerProps, obj> (initialProps)
 
-type StorePicker(props) =
-  inherit React.Component<obj, obj> (props)
+  let goToStore = this.GoToStore // react perform blog
+
+  let mutable myInput : Browser.Element option = None // create a mutable field for the ref
+
+  member __.GoToStore (event : FormEvent ) =
+    // stop the form from submitting
+    event.preventDefault()
+
+    // get the text from that input and change the page to /store/whatever-they-entered
+    myInput |> Option.iter (fun input -> this.props.history.push("/store/"+ !!input?value) )
+
+    ()
 
   override this.render() =
-    div []
+    form
       [
-        str "Hello World"
+        ClassName "store-selector"
+        OnSubmit goToStore
+      ]
+      [
+        h2 [] [ ofString "Please enter a store" ]
+        input
+          [
+            Ref (fun ref -> myInput <- Some ref) // set the ref
+            Required true
+            Placeholder "Store Name"
+            DefaultValue <| getFunName()
+          ]
+        button [] [ ofString "Visit Store →" ]
       ]
