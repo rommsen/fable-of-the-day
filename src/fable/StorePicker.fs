@@ -19,12 +19,15 @@ type [<Pojo>] StorePickerProps =
     history : History
   }
 
-type StorePicker(initialProps) as this =   // as this is important
+type StorePicker(initialProps) as this =   // as this is important to refer to this in the whole type
   inherit React.Component<StorePickerProps, obj> (initialProps)
 
   let goToStore = this.GoToStore // react perform blog
 
   let mutable myInput : Browser.Element option = None // create a mutable field for the ref
+
+  let myInputSet ref =
+    myInput <- Some ref
 
   member __.GoToStore (event : FormEvent ) =
     // stop the form from submitting
@@ -45,7 +48,7 @@ type StorePicker(initialProps) as this =   // as this is important
         h2 [] [ ofString "Please enter a store" ]
         input
           [
-            Ref (fun ref -> myInput <- Some ref) // set the ref
+            Ref myInputSet // set the ref
             Required true
             Placeholder "Store Name"
             DefaultValue <| getFunName()
