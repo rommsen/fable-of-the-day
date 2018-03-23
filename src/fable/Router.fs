@@ -6,6 +6,7 @@ open Fable.Import
 open Fable.Helpers.React
 
 open Helpers
+open App
 open StorePicker
 
 let inline browserRouter (children: React.ReactElement list): React.ReactElement =
@@ -14,11 +15,6 @@ let inline browserRouter (children: React.ReactElement list): React.ReactElement
 let inline switch children =
   ofImport "Switch" "react-router-dom" (() :> obj) children
 
-type FableReactComponentProp<'Props> =
-  'Props -> React.ReactElement list -> React.ReactElement
-
-type JsReactComponentProp =
-  React.ComponentClass<obj>
 
 type RouteProps<'Props> =
   | Path of string
@@ -28,11 +24,11 @@ type RouteProps<'Props> =
 let inline storePicker props children =
   ofType<StorePicker,StorePickerProps,_> props children
 
-let inline route (props : RouteProps<_> list) : React.ReactElement =
-  ofImport "Route"  "react-router-dom" (props |> kvList) []
+let inline app props children =
+  ofType<App,_,_> props children
 
-let App =
-  importDefault<JsReactComponentProp> "../components/App"
+let inline route (props : RouteProps<_> list) : React.ReactElement =
+  ofImport "Route" "react-router-dom" (props |> kvList) []
 
 let NotFound =
   importDefault<JsReactComponentProp> "../components/NotFound"
@@ -43,7 +39,7 @@ let Router () =
       switch
         [
           route [ Exact true ; Path "/" ; Component <| U2.Case1 storePicker ]
-          route [ Path "/store/:storeId" ; Component <| U2.Case2 App ]
+          route [ Path "/store/:storeId" ; Component <| U2.Case1 app ]
           route [ Component <| U2.Case2 NotFound ]
         ]
     ]
