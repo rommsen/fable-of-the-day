@@ -17,8 +17,8 @@ open Helpers
 type HeaderProps =
   | Tagline of string
 
-let header props =
-  ofImport "default" "../components/Header" (props |> kvList) []
+let inline header props =
+  ofDefaultImport "../components/Header" props []
 
 type [<Pojo>] Fish =
   {
@@ -36,7 +36,7 @@ type FishProps =
   | AddToOrder of (string -> unit)
 
 let inline fish props =
-  ofImport "default" "../components/Fish" (props |> kvList) []
+  ofDefaultImport "../components/Fish" props []
 
 type [<Pojo>] AppState =
   {

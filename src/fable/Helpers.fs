@@ -3,6 +3,7 @@ module Helpers
 open Fable.Core.JsInterop
 open Fable.Core
 open Fable.Import
+open Fable.Helpers.React
 
 let getFunName : unit -> string =
     import "getFunName" "../helpers.js"
@@ -16,3 +17,6 @@ type FableReactComponentProp<'Props> =
 
 type JsReactComponentProp =
   React.ComponentClass<obj>
+
+let inline ofDefaultImport component props =
+  ofImport "default" component (props |> kvList)
