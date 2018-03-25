@@ -14,6 +14,14 @@ let cssTransition (props: obj) children =
 let transitionGroup (props : obj) children  =
   ofImport "TransitionGroup" "react-transition-group" props children
 
+let transitionOptions className key=
+  createObj
+    [
+      "classNames" ==> className
+      "key" ==> key
+      "timeout" ==> createObj [ "enter" ==> 500 ; "exit" ==> 500]
+    ]
+
 type [<Pojo>] OrderProps =
   {
     Fishes : Fishes
@@ -25,7 +33,9 @@ type Order(initialProps) as this =
   inherit React.Component<OrderProps,obj>(initialProps)
 
   let renderOrder key =
-    let fishOpt = this.props.Fishes |> Map.tryFind key
+    let fishOpt =
+      this.props.Fishes
+      |> Map.tryFind key
 
     let count =
       this.props.Orders
@@ -41,57 +51,30 @@ type Order(initialProps) as this =
       |> Option.map (fun fish -> fish.name, fish.price)
       |> Option.defaultValue ("fish",0.)
 
-    let transitionOptions =
-      createObj
-        [
-          "classNames" ==> "order"
-          "key" ==> key
-          "timeout" ==> createObj [ "enter" ==> 500 ; "exit" ==> 500]
+    let content =
+      if not isAvailable then
+        span []  [ str "Sorry "; str name ; str " is no longer available" ]
+      else
+        span []
+          [
+            transitionGroup (createObj [ "component" ==> "span";  "className" ==> "count" ])
+              [
+                cssTransition (transitionOptions "count" count)
+                  [ span [] [ ofInt count ] ]
+              ]
+
+            str "lbs "
+            str name
+            str <| formatPrice price
+            button
+              [ OnClick (fun _ -> this.props.RemoveFromOrder key) ]
+              [ str "&times;" ]
         ]
 
-    if not isAvailable then
-      cssTransition transitionOptions
-        [
-          li [ Key key]
-            [
-              str "Sorry "; str name ; str " is no longer available"
-            ]
-        ]
-    else
-      cssTransition transitionOptions
-        [
-          li [ Key key]
-            [
-              span []
-                [
-                  transitionGroup (createObj [ "component" ==> "span";  "className" ==> "count" ])
-                    [
-                      cssTransition
-                        (createObj
-                          [
-                              "classNames" ==> "count"
-                              "key" ==> count
-                              "timeout" ==> createObj [ "enter" ==> 500 ; "exit" ==> 500]
-                          ]
-                        )
-                        [
-                          span [] [ ofInt count ]
-                        ]
-                    ]
-
-                  str "lbs "
-                  str name
-                  str  <| formatPrice price
-                  button
-                    [
-                      OnClick (fun _ -> this.props.RemoveFromOrder key)
-                    ]
-                    [
-                      str "&times;"
-                    ]
-                ]
-            ]
-        ]
+    cssTransition (transitionOptions "order" key)
+      [
+        li [ Key key] [ content ]
+      ]
 
   override __.render () =
     let orderIds =
@@ -121,10 +104,6 @@ type Order(initialProps) as this =
       else
         prevTotal
 
-    let total =
-      orderIds
-      |> List.fold calcTotal 0.
-
     div [ ClassName "order-wrap" ]
       [
         h2 [] [ str "Order" ]
@@ -134,6 +113,6 @@ type Order(initialProps) as this =
 
         div [ ClassName "total"]
           [
-            strong [] [ str <| formatPrice total ]
+            strong [] [ str <| formatPrice (orderIds |> List.fold calcTotal 0.) ]
           ]
       ]
