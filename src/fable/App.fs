@@ -5,8 +5,9 @@ open Fable.Import
 open Fable.Helpers.React
 open Fable.Import.React
 open Fable.Helpers.React.Props
-open Fable.Core.JsInterop
 open Helpers
+open Types
+open Order
 
 // 1. create type for component
 // 2. create Constructor Function for React Element (ofType)
@@ -20,15 +21,6 @@ type HeaderProps =
 let inline header props =
   ofDefaultImport "../components/Header" props []
 
-type [<Pojo>] Fish =
-  {
-    image : string
-    name : string
-    desc : string
-    status : string
-    price : float
-  }
-
 type FishProps =
   | Key of string
   | Index of string
@@ -40,35 +32,41 @@ let inline fish props =
 
 type [<Pojo>] AppState =
   {
-    fishes : Fish list
+    Fishes : Fishes
+    Orders : Orders
   }
 
-let sampleFishes =
+let sampleFishes : (string * Fish) list =
   [
-    {
-      name = "Pacific Halibut"
-      image = "/images/hali.jpg"
-      desc = "Everyones favorite white fish. We will cut it to the size you need and ship it."
-      price = 1724.
-      status = "available"
-    }
+    ("fish1", {
+        name = "Pacific Halibut"
+        image = "/images/hali.jpg"
+        desc = "Everyones favorite white fish. We will cut it to the size you need and ship it."
+        price = 1724.
+        status = "available"
+      })
 
-    {
-      name = "Lobster"
-      image = "/images/lobster.jpg"
-      desc = "These tender mouth-watering beauties are a fantastic hit at any dinner party."
-      price = 3200.
-      status = "available"
-    }
+    ("fish2", {
+        name = "Lobster"
+        image = "/images/lobster.jpg"
+        desc = "These tender mouth-watering beauties are a fantastic hit at any dinner party."
+        price = 3200.
+        status = "available"
+      })
   ]
+
+let order props =
+  ofType<Order,OrderProps,_> props []
 
 
 type App(props) as this=
   inherit React.Component<obj,AppState>(props)
   do
-    this.setInitState { fishes = [] }
+    this.setInitState { Fishes = Map.empty ; Orders = Map.empty }
 
   let addToOrder = this.AddToOrder
+  let removeFromOrder = this.RemoveFromOrder
+
   let loadSampleFishes = this.LoadSampleFishes
 
   let makeFish key element =
@@ -82,11 +80,20 @@ type App(props) as this=
 
     fish props
 
-  member __.AddToOrder index =
-    ()
+  member __.AddToOrder key =
+    let order =
+      this.state.Orders
+      |> Map.tryFind key
+      |> Option.defaultValue 0
+      |> (+) 1
 
-  member __.LoadSampleFishes event =
-    this.setState { this.state with fishes = sampleFishes}
+    this.setState { this.state with Orders = this.state.Orders |> Map.add key order }
+
+  member __.RemoveFromOrder key =
+    this.setState { this.state with Orders = this.state.Orders |> Map.remove key }
+
+  member __.LoadSampleFishes _ =
+    this.setState { this.state with Fishes = sampleFishes |> Map.ofList }
 
   override this.render () =
     div [ ClassName "catch-of-the-day" ]
@@ -96,8 +103,14 @@ type App(props) as this=
             header [ Tagline "Fresh Seafood Market" ]
 
             ul [ ClassName "fishes"]
-              (this.state.fishes |> List.mapi makeFish)
+              (this.state.Fishes |> Map.map makeFish |> Map.toList |> List.map snd)
           ]
+        order
+          {
+            Fishes = this.state.Fishes
+            Orders = this.state.Orders
+            RemoveFromOrder = removeFromOrder
+          }
 
         button [ OnClick loadSampleFishes ]
           [ ofString "Load Sample Fishes" ]

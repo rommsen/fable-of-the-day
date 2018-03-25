@@ -4,8 +4,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Tmp.fs" />
+    <Compile Include="Types.fs" />
     <Compile Include="Helpers.fs" />
     <Compile Include="StorePicker.fs" />
+    <Compile Include="Order.fs" />
     <Compile Include="App.fs" />
     <Compile Include="Router.fs" />
     <Compile Include="Index.fs" />
