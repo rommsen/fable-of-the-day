@@ -6,8 +6,9 @@ open Fable.Helpers.React
 open Fable.Import.React
 open Fable.Helpers.React.Props
 open Helpers
-open Types
 open Order
+open Fish
+open Types
 
 // 1. create type for component
 // 2. create Constructor Function for React Element (ofType)
@@ -21,14 +22,10 @@ type HeaderProps =
 let inline header props =
   ofDefaultImport "../components/Header" props []
 
-type FishProps =
-  | Key of string
-  | Index of string
-  | Details of Fish
-  | AddToOrder of (string -> unit)
+
 
 let inline fish props =
-  ofDefaultImport "../components/Fish" props []
+  ofType<Fish.Fish,FishProps,_> props []
 
 type [<Pojo>] AppState =
   {
@@ -71,12 +68,12 @@ type App(props) as this=
 
   let makeFish key element =
     let props =
-      [
-        Key <| string key
-        Index <| string key
-        Details element
-        AddToOrder addToOrder
-      ]
+      {
+        Key = string key
+        Index = string key
+        Details = element
+        AddToOrder = addToOrder
+      }
 
     fish props
 

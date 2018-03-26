@@ -7,6 +7,7 @@
     <Compile Include="Types.fs" />
     <Compile Include="Helpers.fs" />
     <Compile Include="StorePicker.fs" />
+    <Compile Include="Fish.fs" />
     <Compile Include="Order.fs" />
     <Compile Include="App.fs" />
     <Compile Include="Router.fs" />
