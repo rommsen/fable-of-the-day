@@ -101,3 +101,8 @@ type EditFishForm(initialProps) as this =
           ]
           [ str "Remove Fish" ]
       ]
+
+
+
+let editFishForm props =
+  ofType<EditFishForm,EditFishFormProps,_> props []

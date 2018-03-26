@@ -9,7 +9,7 @@ open Types
 
 type [<Pojo>] AddFishFormProps =
   {
-    AddFish : (Fish -> unit)
+    AddFish : Fish -> unit
   }
 
 type MaybeBuilder() =
@@ -112,3 +112,7 @@ type AddFishForm(initialProps) as this =
 
         button [ Type "submit" ] [ str "+ Add Fish" ]
       ]
+
+
+let addFishForm props =
+  ofType<AddFishForm,AddFishFormProps,_> props []

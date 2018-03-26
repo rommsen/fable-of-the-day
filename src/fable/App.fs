@@ -9,6 +9,7 @@ open Helpers
 open Order
 open Fish
 open Types
+open Inventory
 
 // 1. create type for component
 // 2. create Constructor Function for React Element (ofType)
@@ -21,8 +22,6 @@ type HeaderProps =
 
 let inline header props =
   ofDefaultImport "../components/Header" props []
-
-
 
 let inline fish props =
   ofType<Fish.Fish,FishProps,_> props []
@@ -64,6 +63,12 @@ type App(props) as this=
   let addToOrder = this.AddToOrder
   let removeFromOrder = this.RemoveFromOrder
 
+  let addFish = this.AddFish
+
+  let updateFish = this.UpdateFish
+
+  let deleteFish = this.DeleteFish
+
   let loadSampleFishes = this.LoadSampleFishes
 
   let makeFish key element =
@@ -92,7 +97,28 @@ type App(props) as this=
   member __.LoadSampleFishes _ =
     this.setState { this.state with Fishes = sampleFishes |> Map.ofList }
 
+  member __.DeleteFish key =
+    this.setState { this.state with Fishes = this.state.Fishes |> Map.remove key }
+
+  member __.UpdateFish key fish =
+    this.setState { this.state with Fishes = this.state.Fishes |> Map.add key fish }
+
+  member __.AddFish fish =
+    let key = System.Guid.NewGuid() |> string
+
+    this.setState { this.state with Fishes = this.state.Fishes |> Map.add key fish }
+
   override this.render () =
+    let inventoryProps : InventoryProps =
+      {
+        Fishes = this.state.Fishes
+        Orders = this.state.Orders
+        AddFish = addFish
+        UpdateFish = updateFish
+        DeleteFish = deleteFish
+        LoadSampleFishes = loadSampleFishes
+
+      }
     div [ ClassName "catch-of-the-day" ]
       [
         div [ ClassName "menu" ]
@@ -109,6 +135,5 @@ type App(props) as this=
             RemoveFromOrder = removeFromOrder
           }
 
-        button [ OnClick loadSampleFishes ]
-          [ ofString "Load Sample Fishes" ]
+        inventory inventoryProps
       ]
