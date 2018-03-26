@@ -8,7 +8,6 @@ open Fable.Helpers.React
 open Fable.Helpers.React.Props
 open Helpers
 open Types
-open System.Net.NetworkInformation
 
 
 type [<Pojo>] FishProps =
