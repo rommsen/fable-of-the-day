@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Tmp.fs" />
+    <Compile Include="import/Firebase.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Helpers.fs" />
     <Compile Include="StorePicker.fs" />

@@ -5,15 +5,57 @@ open Fable.Core
 open Fable.Import
 open Fable.Helpers.React
 open Types
+open Firebase
 
 let getFunName : unit -> string =
-    import "getFunName" "../helpers.js"
+  import "getFunName" "../helpers.js"
 
 let formatPrice : float -> string =
   import "formatPrice" "../helpers"
 
+type Rebase =
+  {
+    syncState : string -> obj -> obj
+    removeBinding : obj -> unit
+    post : string -> obj -> unit
+    fetch : string -> obj -> unit
+  }
+
+let rebase : Rebase =
+  importDefault "../base.js"
+
 let inline kvList props =
   keyValueList CaseRules.LowerFirst props
+
+let firebaseObj =
+  createObj
+    [
+      "apiKey" ==> "AIzaSyBFiYmjUURidV7w6674QfIiHfWMixH88aE"
+      "authDomain" ==> "catch-of-the-day-rommsen.firebaseapp.com"
+      "databaseURL" ==> "https://catch-of-the-day-rommsen.firebaseio.com"
+    ]
+
+let firebaseApp : Firebase.App.App =
+  import "firebaseApp" "../base.js"
+
+Browser.console.log(firebaseApp.auth
+
+// let authProvider = Firebase.auth.GithubAuthProvider.Create
+// // let bong = authProvider.Create
+
+
+
+
+// let bla = firebaseApp.auth()
+// bla.signInWithPopup (authProvider)
+//  [`${provider}AuthProvider`]();
+//     firebaseApp
+//       .auth()
+//       .signInWithPopup(authProvider)
+//       .then(this.authHandler);
+
+
+
 
 
 type FableReactComponentProp<'Props> =

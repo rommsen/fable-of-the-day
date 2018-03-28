@@ -2,6 +2,7 @@ module App
 
 open Fable.Core
 open Fable.Import
+open Fable.Core.JsInterop
 open Fable.Helpers.React
 open Fable.Import.React
 open Fable.Helpers.React.Props
@@ -11,6 +12,8 @@ open Order
 open Fish
 open Types
 open Inventory
+open Fable.Core
+open System
 
 // 1. create type for component
 // 2. create Constructor Function for React Element (ofType)
@@ -107,12 +110,39 @@ type App(props) as this=
 
 
   override __.componentDidMount () =
+    let storeId =
+      this.props.``match``.``params``.storeId
+
+    let thenFishes data =
+      if data |> String.IsNullOrEmpty |> not then
+        let fishes = ofJson<Fishes> data
+        this.setState { this.state with Fishes = fishes}
+        // this.setState ((createObj [ "Fishes" ==> fishes]) :?> AppState)
+        // this.setState (fun prevState _ -> { prevState with Fishes = ofJson<Fishes> data })
+
+    rebase.fetch (storeId + "/fishes") (createObj [ "then" ==> thenFishes ])
+
     // load the orders from the localStorage and set the state when found
-    this.props.``match``.``params``.storeId
+    storeId
     |> BrowserLocalStorage.load<Orders>
     |> Option.iter (fun orders -> this.setState { this.state with Orders = orders })
+    // |> Option.iter (fun orders -> this.setState ((createObj [ "Orders" ==> orders]) :?> AppState))
+    // |> Option.iter (fun orders -> this.setState (fun prevState _ -> Browser.console.warn (prevState,["orders"]);{ prevState with Orders = orders }))
 
-  override __.componentDidUpdate (_,_) =
+    ()
+
+  override __.componentDidUpdate (_,prevState) =
+    let storeId =
+      this.props.``match``.``params``.storeId
+
+    let fishes =
+      createObj [ "data" ==> toJson this.state.Fishes ]
+
+    // otherwise we will delete the fishes every time
+    if(prevState.Fishes <> this.state.Fishes) then
+      // save the fishes to firebase
+      rebase.post (storeId + "/fishes") fishes
+
     // save the orders to the local storage
     this.state.Orders
     |> BrowserLocalStorage.save<Orders> this.props.``match``.``params``.storeId

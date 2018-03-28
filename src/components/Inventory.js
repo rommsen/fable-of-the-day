@@ -6,6 +6,7 @@ import EditFishForm from "./EditFishForm";
 import Login from "./Login";
 import base, { firebaseApp } from "../base";
 
+const bla = firebase;
 class Inventory extends React.Component {
   static propTypes = {
     fishes: PropTypes.object,
@@ -46,7 +47,7 @@ class Inventory extends React.Component {
   };
 
   authenticate = provider => {
-    const authProvider = new firebase.auth[`${provider}AuthProvider`]();
+    const authProvider = new firebase.auth["GithubAuthProvider"]();
     firebaseApp
       .auth()
       .signInWithPopup(authProvider)
