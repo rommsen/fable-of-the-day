@@ -16,3 +16,9 @@ type Fishes =
 
 type Orders =
   Map<string, int>
+
+
+type AuthenticationProvider =
+  | Github
+  | Twitter
+  | Facebook

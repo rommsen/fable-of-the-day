@@ -8,9 +8,9 @@ let [<Import("*","firebase")>] firebase: Firebase.IExports = jsNative
 
 module Firebase =
     let [<Import("auth","firebase")>] auth: Auth.IExports = jsNative
-    let [<Import("database","firebase/firebase")>] database: Database.IExports = jsNative
-    let [<Import("storage","firebase/firebase")>] storage: Storage.IExports = jsNative
-    let [<Import("firestore","firebase/firebase")>] firestore: Firestore.IExports = jsNative
+    let [<Import("database","firebase")>] database: Database.IExports = jsNative
+    let [<Import("storage","firebase")>] storage: Storage.IExports = jsNative
+    let [<Import("firestore","firebase")>] firestore: Firestore.IExports = jsNative
 
     type [<AllowNullLiteral>] IExports =
         abstract SDK_VERSION: string
@@ -96,16 +96,6 @@ module Firebase =
 
     module Auth =
 
-        let [<Import("Auth","firebase/auth")>] auth: Auth.IExports = jsNative
-
-        module Auth =
-
-            type [<AllowNullLiteral>] IExports =
-                abstract Persistence: obj
-
-            type Persistence =
-                string
-
         type [<AllowNullLiteral>] IExports =
             abstract EmailAuthProvider: EmailAuthProviderStatic
             abstract EmailAuthProvider_Instance: EmailAuthProvider_InstanceStatic
@@ -148,7 +138,7 @@ module Firebase =
             abstract onAuthStateChanged: nextOrObserver: U2<Firebase.Observer<obj option, obj option>, (Firebase.User option -> obj option)> * ?error: (Firebase.Auth.Error -> obj option) * ?completed: Firebase.Unsubscribe -> Firebase.Unsubscribe
             abstract onIdTokenChanged: nextOrObserver: U2<Firebase.Observer<obj option, obj option>, (Firebase.User option -> obj option)> * ?error: (Firebase.Auth.Error -> obj option) * ?completed: Firebase.Unsubscribe -> Firebase.Unsubscribe
             abstract sendPasswordResetEmail: email: string * ?actionCodeSettings: Firebase.Auth.ActionCodeSettings option -> Promise<obj option>
-            abstract setPersistence: persistence: Firebase.Auth.Auth.Persistence -> Promise<obj option>
+            // RS abstract setPersistence: persistence: Firebase.Auth.Auth.Persistence -> Promise<obj option>
             abstract signInAndRetrieveDataWithCredential: credential: Firebase.Auth.AuthCredential -> Promise<obj option>
             abstract signInAnonymously: unit -> Promise<obj option>
             abstract signInWithCredential: credential: Firebase.Auth.AuthCredential -> Promise<obj option>
@@ -176,7 +166,7 @@ module Firebase =
             abstract PROVIDER_ID: string with get, set
 
         type [<AllowNullLiteral>] EmailAuthProviderStatic =
-            [<Emit "new $0($1...)">] abstract Create: unit -> EmailAuthProvider
+            [<Emit "new $0()">] abstract Create: unit -> EmailAuthProvider
             abstract credential: email: string * password: string -> Firebase.Auth.AuthCredential
 
         type [<AllowNullLiteral>] EmailAuthProvider_Instance =
@@ -184,7 +174,7 @@ module Firebase =
             abstract providerId: string with get, set
 
         type [<AllowNullLiteral>] EmailAuthProvider_InstanceStatic =
-            [<Emit "new $0($1...)">] abstract Create: unit -> EmailAuthProvider_Instance
+            [<Emit "new $0()">] abstract Create: unit -> EmailAuthProvider_Instance
 
         type [<AllowNullLiteral>] Error =
             abstract code: string with get, set
@@ -195,7 +185,7 @@ module Firebase =
             abstract PROVIDER_ID: string with get, set
 
         type [<AllowNullLiteral>] FacebookAuthProviderStatic =
-            [<Emit "new $0($1...)">] abstract Create: unit -> FacebookAuthProvider
+            [<Emit "new $0()">] abstract Create: unit -> FacebookAuthProvider
             abstract credential: token: string -> Firebase.Auth.AuthCredential
 
         type [<AllowNullLiteral>] FacebookAuthProvider_Instance =
@@ -205,14 +195,14 @@ module Firebase =
             abstract setCustomParameters: customOAuthParameters: Object -> Firebase.Auth.AuthProvider
 
         type [<AllowNullLiteral>] FacebookAuthProvider_InstanceStatic =
-            [<Emit "new $0($1...)">] abstract Create: unit -> FacebookAuthProvider_Instance
+            [<Emit "new $0()">] abstract Create: unit -> FacebookAuthProvider_Instance
 
         type [<AllowNullLiteral>] GithubAuthProvider =
             inherit GithubAuthProvider_Instance
             abstract PROVIDER_ID: string with get, set
 
         type [<AllowNullLiteral>] GithubAuthProviderStatic =
-            [<Emit "new $0($1...)">] abstract Create: unit -> GithubAuthProvider
+            [<Emit "new $0()">] abstract Create: unit -> GithubAuthProvider
             abstract credential: token: string -> Firebase.Auth.AuthCredential
 
         type [<AllowNullLiteral>] GithubAuthProvider_Instance =
@@ -222,14 +212,14 @@ module Firebase =
             abstract setCustomParameters: customOAuthParameters: Object -> Firebase.Auth.AuthProvider
 
         type [<AllowNullLiteral>] GithubAuthProvider_InstanceStatic =
-            [<Emit "new $0($1...)">] abstract Create: unit -> GithubAuthProvider_Instance
+            [<Emit "new $0()">] abstract Create: unit -> GithubAuthProvider_Instance
 
         type [<AllowNullLiteral>] GoogleAuthProvider =
             inherit GoogleAuthProvider_Instance
             abstract PROVIDER_ID: string with get, set
 
         type [<AllowNullLiteral>] GoogleAuthProviderStatic =
-            [<Emit "new $0($1...)">] abstract Create: unit -> GoogleAuthProvider
+            [<Emit "new $0()">] abstract Create: unit -> GoogleAuthProvider
             abstract credential: ?idToken: string option * ?accessToken: string option -> Firebase.Auth.AuthCredential
 
         type [<AllowNullLiteral>] GoogleAuthProvider_Instance =
@@ -239,14 +229,14 @@ module Firebase =
             abstract setCustomParameters: customOAuthParameters: Object -> Firebase.Auth.AuthProvider
 
         type [<AllowNullLiteral>] GoogleAuthProvider_InstanceStatic =
-            [<Emit "new $0($1...)">] abstract Create: unit -> GoogleAuthProvider_Instance
+            [<Emit "new $0()">] abstract Create: unit -> GoogleAuthProvider_Instance
 
         type [<AllowNullLiteral>] PhoneAuthProvider =
             inherit PhoneAuthProvider_Instance
             abstract PROVIDER_ID: string with get, set
 
         type [<AllowNullLiteral>] PhoneAuthProviderStatic =
-            [<Emit "new $0($1...)">] abstract Create: unit -> PhoneAuthProvider
+            [<Emit "new $0()">] abstract Create: unit -> PhoneAuthProvider
             abstract credential: verificationId: string * verificationCode: string -> Firebase.Auth.AuthCredential
 
         type [<AllowNullLiteral>] PhoneAuthProvider_Instance =
@@ -255,13 +245,13 @@ module Firebase =
             abstract verifyPhoneNumber: phoneNumber: string * applicationVerifier: Firebase.Auth.ApplicationVerifier -> Promise<obj option>
 
         type [<AllowNullLiteral>] PhoneAuthProvider_InstanceStatic =
-            [<Emit "new $0($1...)">] abstract Create: ?auth: Firebase.Auth.Auth option -> PhoneAuthProvider_Instance
+            [<Emit "new $0()">] abstract Create: ?auth: Firebase.Auth.Auth option -> PhoneAuthProvider_Instance
 
         type [<AllowNullLiteral>] RecaptchaVerifier =
             inherit RecaptchaVerifier_Instance
 
         type [<AllowNullLiteral>] RecaptchaVerifierStatic =
-            [<Emit "new $0($1...)">] abstract Create: unit -> RecaptchaVerifier
+            [<Emit "new $0()">] abstract Create: unit -> RecaptchaVerifier
 
         type [<AllowNullLiteral>] RecaptchaVerifier_Instance =
             inherit Firebase.Auth.ApplicationVerifier
@@ -271,14 +261,14 @@ module Firebase =
             abstract verify: unit -> Promise<obj option>
 
         type [<AllowNullLiteral>] RecaptchaVerifier_InstanceStatic =
-            [<Emit "new $0($1...)">] abstract Create: container: U2<obj option, string> * ?parameters: Object option * ?app: Firebase.App.App option -> RecaptchaVerifier_Instance
+            [<Emit "new $0($1..)">] abstract Create: container: U2<obj option, string> * ?parameters: Object option * ?app: Firebase.App.App option -> RecaptchaVerifier_Instance
 
         type [<AllowNullLiteral>] TwitterAuthProvider =
             inherit TwitterAuthProvider_Instance
             abstract PROVIDER_ID: string with get, set
 
         type [<AllowNullLiteral>] TwitterAuthProviderStatic =
-            [<Emit "new $0($1...)">] abstract Create: unit -> TwitterAuthProvider
+            [<Emit "new $0()">] abstract Create: unit -> TwitterAuthProvider
             abstract credential: token: string * secret: string -> Firebase.Auth.AuthCredential
 
         type [<AllowNullLiteral>] TwitterAuthProvider_Instance =
@@ -295,6 +285,17 @@ module Firebase =
         type [<AllowNullLiteral>] UserMetadata =
             abstract creationTime: string option with get, set
             abstract lastSignInTime: string option with get, set
+
+    module Auth =
+        let [<Import("Auth","firebase/auth")>] auth: Auth.IExports = jsNative
+
+        module Auth =
+
+            type [<AllowNullLiteral>] IExports =
+                abstract Persistence: obj
+
+            type Persistence =
+                string
 
     module Database =
 
@@ -368,7 +369,7 @@ module Firebase =
             inherit PromiseLike<obj option>
 
     module Database =
-        let [<Import("ServerValue","firebase/firebase/database")>] serverValue: ServerValue.IExports = jsNative
+        let [<Import("ServerValue","firebase/database")>] serverValue: ServerValue.IExports = jsNative
 
         module ServerValue =
 

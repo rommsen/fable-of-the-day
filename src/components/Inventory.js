@@ -6,7 +6,6 @@ import EditFishForm from "./EditFishForm";
 import Login from "./Login";
 import base, { firebaseApp } from "../base";
 
-const bla = firebase;
 class Inventory extends React.Component {
   static propTypes = {
     fishes: PropTypes.object,

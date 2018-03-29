@@ -15,14 +15,18 @@ let formatPrice : float -> string =
 
 type Rebase =
   {
-    syncState : string -> obj -> obj
-    removeBinding : obj -> unit
-    post : string -> obj -> unit
-    fetch : string -> obj -> unit
+    post : string -> obj -> JS.Promise<unit>
+    fetch : string -> obj -> JS.Promise<string>
   }
 
 let rebase : Rebase =
   importDefault "../base.js"
+
+let fetch store =
+  rebase.fetch store (createObj [])
+
+let post key value =
+  rebase.post key value
 
 let inline kvList props =
   keyValueList CaseRules.LowerFirst props
@@ -35,28 +39,7 @@ let firebaseObj =
       "databaseURL" ==> "https://catch-of-the-day-rommsen.firebaseio.com"
     ]
 
-let firebaseApp : Firebase.App.App =
-  import "firebaseApp" "../base.js"
-
-Browser.console.log(firebaseApp.auth
-
-// let authProvider = Firebase.auth.GithubAuthProvider.Create
-// // let bong = authProvider.Create
-
-
-
-
-// let bla = firebaseApp.auth()
-// bla.signInWithPopup (authProvider)
-//  [`${provider}AuthProvider`]();
-//     firebaseApp
-//       .auth()
-//       .signInWithPopup(authProvider)
-//       .then(this.authHandler);
-
-
-
-
+let firebaseApp = Firebase.firebase.initializeApp (unbox firebaseObj,"roman")
 
 type FableReactComponentProp<'Props> =
   'Props -> React.ReactElement list -> React.ReactElement

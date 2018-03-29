@@ -10,6 +10,7 @@
     <Compile Include="StorePicker.fs" />
     <Compile Include="AddFishForm.fs" />
     <Compile Include="EditFishForm.fs" />
+    <Compile Include="Login.fs" />
     <Compile Include="Inventory.fs" />
     <Compile Include="Fish.fs" />
     <Compile Include="Order.fs" />

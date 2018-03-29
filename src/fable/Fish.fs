@@ -15,7 +15,7 @@ type [<Pojo>] FishProps =
     Key : string
     Index : string
     Details : Fish
-    AddToOrder : (string -> unit)
+    AddToOrder : string -> unit
   }
 
 type Fish(initialProps) as this =

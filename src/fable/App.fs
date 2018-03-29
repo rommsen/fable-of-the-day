@@ -12,7 +12,6 @@ open Order
 open Fish
 open Types
 open Inventory
-open Fable.Core
 open System
 
 // 1. create type for component
@@ -37,19 +36,13 @@ type [<Pojo>] AppState =
   }
 
 type [<Pojo>] Params =
-  {
-    storeId : string
-  }
+  { storeId : string }
 
 type [<Pojo>] Match =
-  {
-    ``params`` : Params
-  }
+  { ``params`` : Params }
 
 type [<Pojo>] AppProps =
-  {
-    ``match`` : Match
-  }
+  { ``match`` : Match }
 
 let order props =
   ofType<Order,OrderProps,_> props []
@@ -108,55 +101,49 @@ type App(props) as this=
 
     this.setState { this.state with Fishes = this.state.Fishes |> Map.add key fish }
 
+  member __.StoreId =
+    this.props.``match``.``params``.storeId
 
   override __.componentDidMount () =
     let storeId =
       this.props.``match``.``params``.storeId
 
-    let thenFishes data =
+    promise {
+      let! data = fetch <| this.StoreId + "/fishes"
       if data |> String.IsNullOrEmpty |> not then
         let fishes = ofJson<Fishes> data
         this.setState { this.state with Fishes = fishes}
-        // this.setState ((createObj [ "Fishes" ==> fishes]) :?> AppState)
-        // this.setState (fun prevState _ -> { prevState with Fishes = ofJson<Fishes> data })
-
-    rebase.fetch (storeId + "/fishes") (createObj [ "then" ==> thenFishes ])
+    } |> Promise.start
 
     // load the orders from the localStorage and set the state when found
-    storeId
+    this.StoreId
     |> BrowserLocalStorage.load<Orders>
     |> Option.iter (fun orders -> this.setState { this.state with Orders = orders })
-    // |> Option.iter (fun orders -> this.setState ((createObj [ "Orders" ==> orders]) :?> AppState))
-    // |> Option.iter (fun orders -> this.setState (fun prevState _ -> Browser.console.warn (prevState,["orders"]);{ prevState with Orders = orders }))
-
-    ()
 
   override __.componentDidUpdate (_,prevState) =
-    let storeId =
-      this.props.``match``.``params``.storeId
-
-    let fishes =
-      createObj [ "data" ==> toJson this.state.Fishes ]
-
     // otherwise we will delete the fishes every time
     if(prevState.Fishes <> this.state.Fishes) then
       // save the fishes to firebase
-      rebase.post (storeId + "/fishes") fishes
+      promise {
+        let fishes =
+          createObj [ "data" ==> toJson this.state.Fishes ]
+
+        do! post (this.StoreId + "/fishes") fishes
+      } |> Promise.start
 
     // save the orders to the local storage
-    this.state.Orders
-    |> BrowserLocalStorage.save<Orders> this.props.``match``.``params``.storeId
+    this.state.Orders |> BrowserLocalStorage.save<Orders> this.StoreId
 
   override this.render () =
     let inventoryProps : InventoryProps =
       {
+        StoreId = this.StoreId
         Fishes = this.state.Fishes
         Orders = this.state.Orders
         AddFish = addFish
         UpdateFish = updateFish
         DeleteFish = deleteFish
         LoadSampleFishes = loadSampleFishes
-
       }
 
     div [ ClassName "catch-of-the-day" ]
