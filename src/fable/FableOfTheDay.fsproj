@@ -7,6 +7,7 @@
     <Compile Include="import/Firebase.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Helpers.fs" />
+    <Compile Include="Base.fs" />
     <Compile Include="StorePicker.fs" />
     <Compile Include="AddFishForm.fs" />
     <Compile Include="EditFishForm.fs" />

@@ -13,6 +13,7 @@ open Fish
 open Types
 open Inventory
 open System
+open Base
 
 // 1. create type for component
 // 2. create Constructor Function for React Element (ofType)
@@ -105,11 +106,8 @@ type App(props) as this=
     this.props.``match``.``params``.storeId
 
   override __.componentDidMount () =
-    let storeId =
-      this.props.``match``.``params``.storeId
-
     promise {
-      let! data = fetch <| this.StoreId + "/fishes"
+      let! data = Rebase.fetch <| this.StoreId + "/fishes"
       if data |> String.IsNullOrEmpty |> not then
         let fishes = ofJson<Fishes> data
         this.setState { this.state with Fishes = fishes}
@@ -128,7 +126,7 @@ type App(props) as this=
         let fishes =
           createObj [ "data" ==> toJson this.state.Fishes ]
 
-        do! post (this.StoreId + "/fishes") fishes
+        do! Rebase.post (this.StoreId + "/fishes") fishes
       } |> Promise.start
 
     // save the orders to the local storage

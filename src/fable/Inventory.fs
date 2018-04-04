@@ -9,7 +9,7 @@ open Fable.Helpers.React.Props
 open Fable.PowerPack
 open Firebase
 open Types
-open Helpers
+open Base
 open EditFishForm
 open AddFishForm
 open Login
@@ -71,7 +71,7 @@ type Inventory(initialProps) as this =
 
   member __.AuthHandler authData =
     promise {
-      let! data = fetch <| this.props.StoreId + "/owner"
+      let! data = Rebase.fetch <| this.props.StoreId + "/owner"
       let owner =
         if data |> String.IsNullOrEmpty then
           authData.user.uid
@@ -79,7 +79,7 @@ type Inventory(initialProps) as this =
           data
 
       if data |> String.IsNullOrEmpty then
-        do! post (this.props.StoreId + "/owner") (createObj [ "data" ==> authData.user.uid ])
+        do! Rebase.post (this.props.StoreId + "/owner") (createObj [ "data" ==> authData.user.uid ])
 
       this.setState
         {
@@ -101,7 +101,7 @@ type Inventory(initialProps) as this =
           Firebase.auth.GithubAuthProvider.Create ()
 
     promise {
-      let auth = firebaseApp.auth()
+      let auth = Firebase.app.auth()
       let! authData = auth.signInWithPopup authProvider
 
       do! (unbox authData) |> this.AuthHandler
@@ -109,7 +109,7 @@ type Inventory(initialProps) as this =
 
   member __.Logout _ =
     promise {
-      let! _ = firebaseApp.auth().signOut()
+      let! _ = Firebase.app.auth().signOut()
       this.setState { this.state with Uid = None }
     } |> Promise.start
 
@@ -127,7 +127,7 @@ type Inventory(initialProps) as this =
 
     observer
     |> U2.Case2
-    |> firebaseApp.auth().onAuthStateChanged
+    |> Firebase.app.auth().onAuthStateChanged
     |> ignore
 
   override __.render () =
