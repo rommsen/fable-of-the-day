@@ -5,6 +5,7 @@ open Fable.Core.JsInterop
 open Fable.Import
 open Fable.Helpers.React
 
+open Types
 open Helpers
 open App
 open StorePicker

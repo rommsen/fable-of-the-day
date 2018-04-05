@@ -8,6 +8,7 @@ open Fable.Import.React
 open Fable.Helpers.React.Props
 open Fable.PowerPack
 open Helpers
+open SampleFishes
 open Order
 open Fish
 open Types

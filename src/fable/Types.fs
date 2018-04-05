@@ -1,6 +1,13 @@
 module Types
 
 open Fable.Core
+open Fable.Import
+
+type FableReactComponentProp<'Props> =
+  'Props -> React.ReactElement list -> React.ReactElement
+
+type JsReactComponentProp =
+  React.ComponentClass<obj>
 
 type [<Pojo>] Fish =
   {
