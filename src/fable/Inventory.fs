@@ -92,13 +92,13 @@ type Inventory(initialProps) as this =
     let authProvider =
       match provider with
       | Github ->
-          Firebase.auth.GithubAuthProvider.Create ()
+          Firebase.auth.GithubAuthProvider.Create () :> Firebase.Auth.AuthProvider
 
       | Twitter ->
-          Firebase.auth.GithubAuthProvider.Create ()
+          Firebase.auth.TwitterAuthProvider.Create () :> Firebase.Auth.AuthProvider
 
       | Facebook ->
-          Firebase.auth.GithubAuthProvider.Create ()
+          Firebase.auth.FacebookAuthProvider.Create () :> Firebase.Auth.AuthProvider
 
     promise {
       let auth = Firebase.app.auth()
