@@ -2,7 +2,6 @@ module Helpers
 
 open Fable.Core.JsInterop
 open Fable.Core
-open Fable.Import
 open Fable.Helpers.React
 
 let getFunName : unit -> string =

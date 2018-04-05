@@ -9,9 +9,9 @@ module Firebase =
   let private firebaseObj =
     createObj
       [
-        "apiKey" ==> "AIzaSyBFiYmjUURidV7w6674QfIiHfWMixH88aE"
-        "authDomain" ==> "catch-of-the-day-rommsen.firebaseapp.com"
-        "databaseURL" ==> "https://catch-of-the-day-rommsen.firebaseio.com"
+        "apiKey" ==> "AIzaSyBdzsaNt3_E_gHD2gcko4PmlHqbGxz7vrA"
+        "authDomain" ==> "fable-of-the-day.firebaseapp.com"
+        "databaseURL" ==> "https://fable-of-the-day.firebaseio.com"
       ]
 
   let app =
