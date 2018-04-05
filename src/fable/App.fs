@@ -2,15 +2,19 @@ module App
 
 open Fable.Core
 open Fable.Import
+open Fable.Core.JsInterop
 open Fable.Helpers.React
 open Fable.Import.React
 open Fable.Helpers.React.Props
 open Fable.PowerPack
 open Helpers
+open SampleFishes
 open Order
 open Fish
 open Types
 open Inventory
+open System
+open Base
 
 // 1. create type for component
 // 2. create Constructor Function for React Element (ofType)
@@ -34,19 +38,13 @@ type [<Pojo>] AppState =
   }
 
 type [<Pojo>] Params =
-  {
-    storeId : string
-  }
+  { storeId : string }
 
 type [<Pojo>] Match =
-  {
-    ``params`` : Params
-  }
+  { ``params`` : Params }
 
 type [<Pojo>] AppProps =
-  {
-    ``match`` : Match
-  }
+  { ``match`` : Match }
 
 let order props =
   ofType<Order,OrderProps,_> props []
@@ -105,28 +103,46 @@ type App(props) as this=
 
     this.setState { this.state with Fishes = this.state.Fishes |> Map.add key fish }
 
+  member __.StoreId =
+    this.props.``match``.``params``.storeId
 
   override __.componentDidMount () =
+    promise {
+      let! data = Rebase.fetch <| this.StoreId + "/fishes"
+      if data |> String.IsNullOrEmpty |> not then
+        let fishes = ofJson<Fishes> data
+        this.setState { this.state with Fishes = fishes}
+    } |> Promise.start
+
     // load the orders from the localStorage and set the state when found
-    this.props.``match``.``params``.storeId
+    this.StoreId
     |> BrowserLocalStorage.load<Orders>
     |> Option.iter (fun orders -> this.setState { this.state with Orders = orders })
 
-  override __.componentDidUpdate (_,_) =
+  override __.componentDidUpdate (_,prevState) =
+    // otherwise we will delete the fishes every time
+    if(prevState.Fishes <> this.state.Fishes) then
+      // save the fishes to firebase
+      promise {
+        let fishes =
+          createObj [ "data" ==> toJson this.state.Fishes ]
+
+        do! Rebase.post (this.StoreId + "/fishes") fishes
+      } |> Promise.start
+
     // save the orders to the local storage
-    this.state.Orders
-    |> BrowserLocalStorage.save<Orders> this.props.``match``.``params``.storeId
+    this.state.Orders |> BrowserLocalStorage.save<Orders> this.StoreId
 
   override this.render () =
     let inventoryProps : InventoryProps =
       {
+        StoreId = this.StoreId
         Fishes = this.state.Fishes
         Orders = this.state.Orders
         AddFish = addFish
         UpdateFish = updateFish
         DeleteFish = deleteFish
         LoadSampleFishes = loadSampleFishes
-
       }
 
     div [ ClassName "catch-of-the-day" ]

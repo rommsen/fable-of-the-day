@@ -3,12 +3,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Tmp.fs" />
+    <Compile Include="import/Firebase.fs" />
     <Compile Include="Types.fs" />
+    <Compile Include="SampleFishes.fs" />
     <Compile Include="Helpers.fs" />
+    <Compile Include="Base.fs" />
     <Compile Include="StorePicker.fs" />
     <Compile Include="AddFishForm.fs" />
     <Compile Include="EditFishForm.fs" />
+    <Compile Include="Login.fs" />
     <Compile Include="Inventory.fs" />
     <Compile Include="Fish.fs" />
     <Compile Include="Order.fs" />
