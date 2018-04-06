@@ -68,7 +68,7 @@ type Order(initialProps) as this =
             str <| formatPrice price
             button
               [ OnClick (fun _ -> this.props.RemoveFromOrder key) ]
-              [ str "&times;" ]
+              [ str "x" ]
         ]
 
     cssTransition (transitionOptions "order" key)
